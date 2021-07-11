@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'cz=&%f*9(d*zo$_55p=(p)(eki#p$pb^0159-)8k^6$9c3l&_b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['acc-prof.herokuapp.com','127.0.0.1']
 
@@ -41,9 +41,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
 
     'django_filters',
-    
 ]
- 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -77,39 +76,14 @@ WSGI_APPLICATION = 'crm1.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases..
+# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-'''
-STEPS FOR DJANGO POSTGRESQL DATABASE + AWS RDS
-
-1 - Download and install PostgreSQL & PG Admin
-2 - Login to PG admin & Create Database
-3 - Connect database to Django App & run migrations
-4 - Create database on AWS
-5 - Connect to live AWS Database with PG admin & Django
-
-'''
-
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_1',
-        'USER':'postgres',
-        'PASSWORD':'mukati440027',
-        'HOST':'localhost',
-        'PORT':'5432'
-    }
-}
-'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-
 
 
 # Password validation
@@ -147,8 +121,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
+STATIC_ROOT= os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/images/'
@@ -158,6 +132,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
 
 
 #SMTP Configuration
