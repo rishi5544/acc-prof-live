@@ -12,7 +12,7 @@ from django.contrib.auth.models import Group
 
 # Create your views here.
 from .models import *
-from .forms import OrderForm, CreateUserForm, CustomerForm
+from .forms import OrderForm, CreateUserForm, CustomerForm, OrderFormUser
 from .filters import OrderFilter
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
@@ -131,14 +131,15 @@ def customer(request, pk_test):
 	return render(request, 'accounts/customer.html',context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
 def createOrder(request, pk):
-	OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=10 )
+	OrderFormSet = inlineformset_factory(Customer, Order, fields=('product',), extra=10 )
 	customer = Customer.objects.get(id=pk)
 	formset = OrderFormSet(queryset=Order.objects.none(),instance=customer)
 	#form = OrderForm(initial={'customer':customer})
 	if request.method == 'POST':
 		#print('Printing POST:', request.POST)
-		form = OrderForm(request.POST)
+		#form = OrderForm(request.POST)
 		formset = OrderFormSet(request.POST, instance=customer)
 		if formset.is_valid():
 			formset.save()
@@ -148,6 +149,7 @@ def createOrder(request, pk):
 	return render(request, 'accounts/order_form.html', context)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def updateOrder(request, pk):
 	order = Order.objects.get(id=pk)
 	form = OrderForm(instance=order)
@@ -155,6 +157,22 @@ def updateOrder(request, pk):
 	if request.method == 'POST':
 
 		form = OrderForm(request.POST, instance=order)
+		if form.is_valid():
+			form.save()
+			return redirect('home')
+
+	context = {'form':form}
+	return render(request, 'accounts/order_form.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def updateOrderUser(request, pk):
+	order = Order.objects.get(id=pk)
+	form = OrderFormUser(instance=order)
+	print('ORDER:', order)
+	if request.method == 'POST':
+
+		form = OrderFormUser(request.POST, instance=order)
 		if form.is_valid():
 			form.save()
 			return redirect('user-page')

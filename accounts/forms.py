@@ -15,6 +15,13 @@ class OrderForm(ModelForm):
 	class Meta:
 		model = Order
 		fields = '__all__'
+		
+
+class OrderFormUser(ModelForm):
+	class Meta:
+		model = Order
+		fields = '__all__'
+		exclude=['status']
 
 
 class CreateUserForm(UserCreationForm):
